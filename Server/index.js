@@ -3,7 +3,7 @@ require('dotenv').config(); // Ensure you have the dotenv package installed
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const User = require('./models/User'); // Import your User model
