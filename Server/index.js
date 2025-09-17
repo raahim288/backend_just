@@ -13,9 +13,22 @@ const PORT = process.env.PORT || 3000; // Use environment port
 
 // Middleware
 app.use(express.json());
+
+
+const allowedOrigins = [
+  'http://localhost:5173', // Local development
+  'https://frontend-kyicmrdpy-raahimabdul30-gmailcoms-projects.vercel.app' // Vercel deployed frontend
+]
 app.use(cors({
-  origin: 'http://localhost:5173', // Frontend URL (React dev server)
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
 }));
 
 // MongoDB Connection String (use environment variable for secure storage)
@@ -32,8 +45,8 @@ mongoose
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER, 
-    pass: process.env.EMAIL_PASS, 
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -136,7 +149,7 @@ app.post('/verify-otp', (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 
 
