@@ -13,23 +13,36 @@ const PORT = process.env.PORT || 3000; // Use environment port
 
 // Middleware
 app.use(express.json());
+app.use((req, res, next) => {
+  console.log('Incoming request origin:', req.headers.origin);
+  next();
+});
 
 
 const allowedOrigins = [
-  'http://localhost:5173', // Local development
-  'https://frontend-6o4uffuos-raahimabdul30-gmailcoms-projects.vercel.app' // Updated Vercel URL
+  'http://localhost:5173',
+  'https://frontend-6o4uffuos-raahimabdul30-gmailcoms-projects.vercel.app'
 ];
+
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+    console.log('Checking origin for CORS:', origin); // Log each origin to debug
+
+    // Allow requests like Postman or server-to-server calls
+    if (!origin) return callback(null, true);
+
+    // Allow specific origins or any vercel.app subdomain
+    if (allowedOrigins.includes(origin) || /\.vercel\.app$/.test(origin)) {
+      return callback(null, true);
     }
+
+    console.error('Blocked by CORS:', origin);
+    return callback(new Error('Not allowed by CORS'));
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
+
 
 // MongoDB Connection String (use environment variable for secure storage)
 const uri = process.env.MONGO_URI;
