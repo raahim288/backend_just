@@ -17,8 +17,8 @@ app.use(express.json());
 
 const allowedOrigins = [
   'http://localhost:5173', // Local development
-  'https://frontend-kyicmrdpy-raahimabdul30-gmailcoms-projects.vercel.app' // Vercel deployed frontend
-]
+  'https://frontend-6o4uffuos-raahimabdul30-gmailcoms-projects.vercel.app' // Updated Vercel URL
+];
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
